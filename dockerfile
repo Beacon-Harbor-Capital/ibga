@@ -67,4 +67,4 @@ RUN sudo chmod a+rx /bin/show_text && \
     sudo chmod a+rx /opt/ibga/*
 EXPOSE 4000/tcp
 EXPOSE 5800/tcp
-ENTRYPOINT ["/opt/ibga/start.sh"]
+ENTRYPOINT ["/opt/ibga/manager.sh"]
