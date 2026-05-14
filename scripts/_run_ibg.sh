@@ -64,7 +64,7 @@ function _login_type {
             xdotool mousemove ${PROPS["mx"]} ${PROPS["my"]} click 1
             sleep 0.25
             xdotool key ctrl+a BackSpace
-            xdotool type $2
+            printf '%s' "$2" | xdotool type --clearmodifiers --file -
             sleep 0.25
             break
         fi
@@ -631,9 +631,9 @@ function __maintenance_handle_welcome {
                             [ "${PROPS['editable']}" == "y" ] && \
                             [ "$RUN_OTP" == 1 ]; then
                             xdotool mousemove ${PROPS["mx"]} ${PROPS["my"]} click 1
-                            TOTP_ANSWER=$(oathtool --totp -b "$TOTP_KEY")
+                            TOTP_ANSWER=$(printf '%s' "$TOTP_KEY" | /opt/ibga/_totp.py)
                             sleep 0.25
-                            xdotool type $TOTP_ANSWER
+                            printf '%s' "$TOTP_ANSWER" | xdotool type --clearmodifiers --file -
                             _info "    TOTP answer entered\n"
                             sleep 0.25
                             ACCEPT_OTP=1

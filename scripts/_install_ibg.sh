@@ -45,14 +45,13 @@ MSG="----------------------------
     ex=$(_ibg_installer_exists)
     if [ "$ex" = true ]; then
         _info "• will use the existing installer: $IBG_DIR/$INSTALLER_FN ...\n"
+    elif [ -f /opt/ibgateway.sh ]; then
+        _info "• using baked-in IBG installer at /opt/ibgateway.sh ...\n"
+        cp /opt/ibgateway.sh "$IBG_DIR/$INSTALLER_FN"
+        chmod +x "$IBG_DIR/$INSTALLER_FN"
     else
-        show_text 1024 768 "Downloading IBG installer ..." &
-        local stpid="$!"
-        URL="$IBG_DOWNLOAD_URL"
-        _info "• downloading from $URL ...\n"
-        curl -k "$URL" -# -o $IBG_DIR/$INSTALLER_FN
-        chmod +x $IBG_DIR/$INSTALLER_FN
-        sudo kill -SIGTERM $stpid
+        _err "• no IBG installer found at /opt/ibgateway.sh and none in $IBG_DIR.\n"
+        return 1
     fi
     show_text 1024 768 "Installing IBG ..." &
     local stpid="$!"
