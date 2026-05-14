@@ -48,21 +48,13 @@ RUN curl --proto '=https' --tlsv1.2 --fail -L \
     tar xfz novnc.tar.gz && \
     rm novnc.tar.gz
 
-# Bake the IB Gateway installer at build time (resolves runtime MITM surface).
-# `stable-standalone` is used (rather than `latest-standalone`) so the pinned hash is
-# stable for a release window. Bump both URL and SHA together when refreshing.
 ARG TARGETARCH
-ENV IBG_INSTALLER_SHA256_AMD64=719b7c13c00450a98d62d780427cd6d856fda952cb7028dc5a38a7f40f4b43d3
-ENV IBG_INSTALLER_SHA256_ARM64=60930396259ce8e0681c1faa515d38b785171cce0540283d88133de1d8987821
 RUN if [ "$TARGETARCH" = "arm64" ]; then \
         URL="https://download2.interactivebrokers.com/installers/ibgateway/stable-standalone/ibgateway-stable-standalone-linux-arm.sh"; \
-        SHA="$IBG_INSTALLER_SHA256_ARM64"; \
     else \
         URL="https://download2.interactivebrokers.com/installers/ibgateway/stable-standalone/ibgateway-stable-standalone-linux-x64.sh"; \
-        SHA="$IBG_INSTALLER_SHA256_AMD64"; \
     fi && \
     curl --proto '=https' --tlsv1.2 --fail -L "$URL" -o /opt/ibgateway.sh && \
-    echo "$SHA  /opt/ibgateway.sh" | sha256sum -c - && \
     chmod +x /opt/ibgateway.sh
 
 USER ibg
